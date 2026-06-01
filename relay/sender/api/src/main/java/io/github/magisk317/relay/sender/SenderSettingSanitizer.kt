@@ -910,7 +910,7 @@ object SenderSettingSanitizer {
 
     private fun hasStrongValidator(fieldName: String): Boolean {
         return when (fieldName) {
-            "method", "msgtype", "msgType", "msgKey", "contentType", "recvType", "parseMode", "proxyType", "receiveIdType",
+            "method", "msgtype", "msgType", "msgKey", "contentType", "recvType", "parseMode", "proxyType", "authType", "receiveIdType",
             "encryptionProtocol", "transformation", "level", "uriType", "priority",
             "server", "webServer", "webhook", "webHook", "customizeAPI", "apiBase", "callbackUrl", "url", "website",
             "authEmail", "fromEmail", "toEmail", "host", "port", "proxyPort", "simSlot", "qos",
@@ -930,6 +930,7 @@ object SenderSettingSanitizer {
             "parseMode" -> normalized(value) in setOf("html", "markdownv2")
             "proxyType" -> safeString(value).trim().uppercase(Locale.ROOT) in setOf("DIRECT", "HTTP", "SOCKS") ||
                 value is Proxy.Type
+            "authType" -> normalized(value) in setOf("app_id", "token")
             "receiveIdType" -> normalized(value) in setOf("user_id", "open_id", "union_id", "email", "chat_id")
             "encryptionProtocol" -> safeString(value) in setOf("Plain", "S/MIME", "OpenPGP")
             "transformation" -> safeString(value) in setOf("none", "AES/GCM/NoPadding", "AES/CBC/PKCS5Padding")
@@ -946,7 +947,7 @@ object SenderSettingSanitizer {
             "apiToken" -> isTelegramBotToken(value)
             "chatId" -> isTelegramChatId(value)
             "messageThreadId" -> isTelegramThreadId(value)
-            "token", "sendKey", "appSecret", "appKey", "appId", "receiveId" -> isLikelyToken(value)
+            "token", "sendKey", "appSecret", "appKey", "appId", "receiveId", "botToken" -> isLikelyToken(value)
             "secret" -> isLikelySecret(value)
             "corpID" -> safeString(value).trim().startsWith("ww", ignoreCase = true)
             "agentID" -> safeString(value).trim().toLongOrNull() != null
